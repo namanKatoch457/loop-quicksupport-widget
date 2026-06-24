@@ -38,33 +38,32 @@
       "settings": {
         "image_overlay_opacity": 40,
         "image_height": "large",
-        "desktop_content_position": "bottom-center",
-        "show_text_box": false,
         "image_behavior": "none",
+        "desktop_content_position": "bottom-center",
         "desktop_content_alignment": "center",
+        "show_text_box": false,
         "color_scheme": "scheme-3",
-        "mobile_content_alignment": "center",
         "stack_images_on_mobile": false,
+        "mobile_content_alignment": "center",
         "show_text_below": false
       }
     },
     "featured_collection": {
       "type": "featured-collection",
       "settings": {
+        "collection": "all",
+        "products_to_show": 8,
         "title": "Featured products",
         "heading_size": "h2",
         "description": "",
         "show_description": false,
         "description_style": "body",
-        "collection": "all",
-        "products_to_show": 8,
         "columns_desktop": 4,
-        "color_scheme": "scheme-1",
+        "enable_desktop_slider": false,
         "full_width": false,
         "show_view_all": true,
         "view_all_style": "solid",
-        "enable_desktop_slider": false,
-        "swipe_on_mobile": false,
+        "color_scheme": "scheme-1",
         "image_ratio": "adapt",
         "image_shape": "default",
         "show_secondary_image": true,
@@ -72,13 +71,263 @@
         "show_rating": false,
         "quick_add": "none",
         "columns_mobile": "2",
+        "swipe_on_mobile": false,
         "padding_top": 44,
         "padding_bottom": 36
+      }
+    },
+    "quick_support_J3PAyx": {
+      "type": "quick-support",
+      "blocks": {
+        "category_qMUxYX": {
+          "type": "category",
+          "settings": {
+            "title": "Shipping & Delivery",
+            "icon": "truck"
+          }
+        },
+        "question_yCczq3": {
+          "type": "question",
+          "settings": {
+            "category_title": "Shipping & Delivery",
+            "question": "How long does shipping take?",
+            "answer": "<p>Orders are typically processed within 1–2 business days. Standard shipping usually takes 3–7 business days, depending on your location.</p>",
+            "featured": false
+          }
+        },
+        "question_RgPWNJ": {
+          "type": "question",
+          "settings": {
+            "category_title": "Shipping & Delivery",
+            "question": "Do you offer free shipping?",
+            "answer": "<p>Yes, we offer free shipping on orders above a specified amount. Shipping charges for smaller orders are calculated at checkout.</p>",
+            "featured": false
+          }
+        },
+        "category_NrNqNg": {
+          "type": "category",
+          "settings": {
+            "title": "Product Information",
+            "icon": "box"
+          }
+        },
+        "question_RRWcRR": {
+          "type": "question",
+          "settings": {
+            "category_title": "Product Information",
+            "question": "How do I choose the right size?",
+            "answer": "<p>Please refer to our size guide available on each product page. If you need further assistance, our support team is happy to help.</p>",
+            "featured": false
+          }
+        },
+        "question_hgrWni": {
+          "type": "question",
+          "settings": {
+            "category_title": "Product Information",
+            "question": "Are your product images accurate?",
+            "answer": "<p>We accept returns within <strong>30 days</strong> of delivery.</p>\n<p>To start a return:</p>\n<p>1. Email us at <a href=\"mailto:returns@example.com\">returns@example.com</a></p>\n<p>2. We'll send you a return label within 24 hours.</p>\n<p>3. Drop off the package at any courier.</p>",
+            "featured": true
+          }
+        },
+        "question_YNhXYd": {
+          "type": "question",
+          "settings": {
+            "category_title": "Product Information",
+            "question": "How can I find more details about a product?",
+            "answer": "<p>Each product page includes detailed descriptions, specifications, materials, dimensions, and care instructions.</p>",
+            "featured": true
+          }
+        },
+        "category_zaP8CD": {
+          "type": "category",
+          "settings": {
+            "title": "Returns & Exchanges",
+            "icon": "refresh"
+          }
+        },
+        "question_wLpgic": {
+          "type": "question",
+          "settings": {
+            "category_title": "Returns & Exchanges",
+            "question": "Can I exchange a product for a different size or color?",
+            "answer": "<p>Yes, exchanges are available subject to stock availability. Contact us within the return period to arrange an exchange.</p>",
+            "featured": false
+          }
+        },
+        "question_yykn8f": {
+          "type": "question",
+          "settings": {
+            "category_title": "Returns & Exchanges",
+            "question": "What items are not eligible for returns or exchanges?",
+            "answer": "<p>Personalized items, gift cards, and products marked as final sale cannot be returned or exchanged.</p>",
+            "featured": false
+          }
+        },
+        "category_CNGG3i": {
+          "type": "category",
+          "settings": {
+            "title": "Orders & Payments",
+            "icon": "tag"
+          }
+        },
+        "question_QXjbi9": {
+          "type": "question",
+          "settings": {
+            "category_title": "Orders & Payments",
+            "question": "Can I modify or cancel my order after placing it?",
+            "answer": "<p>Orders can be modified or canceled before they are shipped. Please contact us as soon as possible after placing your order.</p>",
+            "featured": false
+          }
+        },
+        "question_7GJmHX": {
+          "type": "question",
+          "settings": {
+            "category_title": "Orders & Payments",
+            "question": "Why was my payment declined?",
+            "answer": "<p>Payments may be declined due to insufficient funds, incorrect billing information, or restrictions from your bank. Please verify your details and try again.</p>",
+            "featured": false
+          }
+        },
+        "category_LVpDem": {
+          "type": "category",
+          "settings": {
+            "title": "General Info",
+            "icon": "info"
+          }
+        },
+        "question_Tkb4aW": {
+          "type": "question",
+          "settings": {
+            "category_title": "Shipping & Delivery",
+            "question": "How long does it take to receive an order?",
+            "answer": "<p>Orders are usually delivered within 5–7 business days.</p>",
+            "featured": true
+          }
+        },
+        "question_Ay4EUk": {
+          "type": "question",
+          "settings": {
+            "category_title": "Shipping & Delivery",
+            "question": "How can I track my order?",
+            "answer": "<p>Orders are usually delivered within 5–7 business days.</p>",
+            "featured": true
+          }
+        },
+        "question_rFEjXX": {
+          "type": "question",
+          "settings": {
+            "category_title": "Returns & Exchanges",
+            "question": "What is your return policy?",
+            "answer": "<p>Orders are usually delivered within 5–7 business days.</p>",
+            "featured": true
+          }
+        },
+        "question_8E4Fni": {
+          "type": "question",
+          "settings": {
+            "category_title": "Returns & Exchanges",
+            "question": "How do I start an exchange?",
+            "answer": "<p>Orders are usually delivered within 5–7 business days.</p>",
+            "featured": true
+          }
+        },
+        "question_94Pjhk": {
+          "type": "question",
+          "settings": {
+            "category_title": "Orders & Payments",
+            "question": "Which payment methods do you accept?",
+            "answer": "<p>Orders are usually delivered within 5–7 business days.</p>",
+            "featured": true
+          }
+        },
+        "question_XxgjYN": {
+          "type": "question",
+          "settings": {
+            "category_title": "Orders & Payments",
+            "question": "Can I modify my order after placing it?",
+            "answer": "<p>Orders are usually delivered within 5–7 business days.</p>",
+            "featured": true
+          }
+        },
+        "question_mb83e9": {
+          "type": "question",
+          "settings": {
+            "category_title": "General Info",
+            "question": "Where are you based?",
+            "answer": "<p>Orders are usually delivered within 5–7 business days.</p>",
+            "featured": true
+          }
+        },
+        "question_UrzTty": {
+          "type": "question",
+          "settings": {
+            "category_title": "General Info",
+            "question": "Do you ship internationally?",
+            "answer": "<p>Orders are usually delivered within 5–7 business days.</p>",
+            "featured": true
+          }
+        }
+      },
+      "block_order": [
+        "category_qMUxYX",
+        "question_yCczq3",
+        "question_RgPWNJ",
+        "category_NrNqNg",
+        "question_RRWcRR",
+        "question_hgrWni",
+        "question_YNhXYd",
+        "category_zaP8CD",
+        "question_wLpgic",
+        "question_yykn8f",
+        "category_CNGG3i",
+        "question_QXjbi9",
+        "question_7GJmHX",
+        "category_LVpDem",
+        "question_Tkb4aW",
+        "question_Ay4EUk",
+        "question_rFEjXX",
+        "question_8E4Fni",
+        "question_94Pjhk",
+        "question_XxgjYN",
+        "question_mb83e9",
+        "question_UrzTty"
+      ],
+      "name": "Quick Support",
+      "settings": {
+        "launcher_enabled": true,
+        "launcher_bg": "#a50000",
+        "launcher_icon_color": "#ffffff",
+        "launcher_size": 60,
+        "launcher_offset_x": 24,
+        "launcher_offset_y": 24,
+        "contact_strip_bg": "#a50000",
+        "contact_icon_color": "#ffffff",
+        "show_phone": true,
+        "phone_number": "+91 98765 43210",
+        "phone_tooltip": "Continue on Phone",
+        "show_whatsapp": true,
+        "whatsapp_number": "919876543210",
+        "whatsapp_tooltip": "Continue on WhatsApp",
+        "show_email": true,
+        "email_address": "support@example.com",
+        "email_tooltip": "Continue on Email",
+        "panel_bg": "#ffffff",
+        "text_color": "#111827",
+        "muted_text_color": "#6b7280",
+        "accent_color": "#a50000",
+        "panel_radius": 16,
+        "panel_title": "How can we help?",
+        "categories_heading": "FAQ Categories",
+        "general_heading": "General queries",
+        "back_label": "Back",
+        "close_label": "Close",
+        "empty_state": "No questions yet. Check back soon."
       }
     }
   },
   "order": [
     "image_banner",
-    "featured_collection"
+    "featured_collection",
+    "quick_support_J3PAyx"
   ]
 }

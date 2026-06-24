@@ -1,9 +1,16 @@
-/* Quick Support — widget styles */
+/* =============================================================================
+   Quick Support — widget styles
+   Depends on CSS custom properties set inline on .qs-widget by Liquid.
+   ============================================================================= */
 
 .qs-widget {
+    /* Easing + timing used across all transitions */
     --qs-ease: cubic-bezier(0.22, 1, 0.36, 1);
     --qs-duration: 260ms;
-    --qs-shadow: 0 24px 60px rgba(15, 23, 42, 0.18), 0 4px 10px rgba(15, 23, 42, 0.08);
+
+    /* Shared visual tokens */
+    --qs-shadow: 0 24px 60px rgba(15, 23, 42, 0.18),
+        0 4px 10px rgba(15, 23, 42, 0.08);
     --qs-border: rgba(15, 23, 42, 0.08);
 
     position: fixed;
@@ -16,14 +23,18 @@
 }
 
 .qs-icon {
+    display: block;
     width: 100%;
     height: 100%;
-    display: block;
 }
 
-/* Launcher */
+
+/* =============================================================================
+   Launcher button
+   ============================================================================= */
 
 .qs-launcher {
+    position: relative;
     width: var(--qs-launcher-size);
     height: var(--qs-launcher-size);
     border-radius: 50%;
@@ -34,30 +45,7 @@
     place-items: center;
     cursor: pointer;
     box-shadow: var(--qs-shadow);
-    transition: transform var(--qs-duration) var(--qs-ease),
-        box-shadow var(--qs-duration) var(--qs-ease),
-        opacity var(--qs-duration) var(--qs-ease);
-}
-
-.qs-widget.is-open .qs-launcher {
-    opacity: 0;
-    transform: scale(0.85);
-    pointer-events: none;
-}
-
-.qs-launcher::before {
-    content: "";
-    position: absolute;
-    inset: -6px;
-    border-radius: 50%;
-    background: var(--qs-launcher-bg);
-    opacity: 0.35;
-    z-index: -1;
-    animation: qs-pulse 2.4s var(--qs-ease) infinite;
-}
-
-.qs-launcher {
-    position: relative;
+    transition: opacity var(--qs-duration) var(--qs-ease);
 }
 
 .qs-launcher>svg,
@@ -66,30 +54,21 @@
     height: 48%;
 }
 
-.qs-launcher:hover {
-    transform: translateY(-2px) scale(1.04);
-}
-
 .qs-launcher:focus-visible {
     outline: 3px solid var(--qs-accent);
     outline-offset: 3px;
 }
 
-@keyframes qs-pulse {
-
-    0%,
-    100% {
-        transform: scale(1);
-        opacity: 0.35;
-    }
-
-    50% {
-        transform: scale(1.15);
-        opacity: 0;
-    }
+/* Hide when panel opens */
+.qs-widget.is-open .qs-launcher {
+    opacity: 0;
+    pointer-events: none;
 }
 
-/* Panel */
+
+/* =============================================================================
+   Panel
+   ============================================================================= */
 
 .qs-panel {
     position: absolute;
@@ -101,15 +80,18 @@
     background: var(--qs-panel-bg);
     border-radius: var(--qs-radius);
     box-shadow: var(--qs-shadow);
-    border: 1px solid var(--qs-border);
+
     overflow: visible;
     display: flex;
     flex-direction: column;
+
+    /* Closed state */
     transform-origin: bottom left;
     transform: scale(0.96) translateY(8px);
     opacity: 0;
     pointer-events: none;
-    transition: transform var(--qs-duration) var(--qs-ease),
+    transition:
+        transform var(--qs-duration) var(--qs-ease),
         opacity var(--qs-duration) var(--qs-ease);
 }
 
@@ -120,8 +102,9 @@
 }
 
 
-
-/* Contact strip */
+/* =============================================================================
+   Contact strip
+   ============================================================================= */
 
 .qs-strip {
     display: flex;
@@ -139,7 +122,9 @@
     gap: 10px;
 }
 
+/* Round icon links — phone, WhatsApp, email */
 .qs-strip__btn {
+    position: relative;
     width: 38px;
     height: 38px;
     border-radius: 50%;
@@ -148,14 +133,16 @@
     display: grid;
     place-items: center;
     text-decoration: none;
-    position: relative;
-    transition: background var(--qs-duration) var(--qs-ease),
-        transform var(--qs-duration) var(--qs-ease);
+    transition:
+        background var(--qs-duration) var(--qs-ease),
+        transform var(--qs-duration) var(--qs-ease),
+        box-shadow var(--qs-duration) var(--qs-ease);
 }
 
 .qs-strip__btn:hover {
     background: rgba(255, 255, 255, 0.3);
     transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .qs-strip__btn>svg {
@@ -163,6 +150,7 @@
     height: 18px;
 }
 
+/* Tooltip bubble */
 .qs-strip__btn::after {
     content: attr(data-qs-tooltip);
     position: absolute;
@@ -178,11 +166,13 @@
     white-space: nowrap;
     opacity: 0;
     pointer-events: none;
-    transition: opacity var(--qs-duration) var(--qs-ease),
-        transform var(--qs-duration) var(--qs-ease);
     z-index: 10;
+    transition:
+        opacity var(--qs-duration) var(--qs-ease),
+        transform var(--qs-duration) var(--qs-ease);
 }
 
+/* Tooltip arrow */
 .qs-strip__btn::before {
     content: "";
     position: absolute;
@@ -207,6 +197,7 @@
     opacity: 1;
 }
 
+/* Close button (top-right of strip) */
 .qs-strip__close {
     width: 32px;
     height: 32px;
@@ -229,7 +220,31 @@
     height: 16px;
 }
 
-/* Body and views */
+
+/* =============================================================================
+   Decorative wave (strip → body transition)
+   ============================================================================= */
+
+.qs-wave {
+    width: 100%;
+    line-height: 0;
+    flex-shrink: 0;
+    margin-top: -1px;
+}
+
+.qs-wave svg {
+    display: block;
+    width: 100%;
+    height: 30px;
+}
+
+
+/* =============================================================================
+   Body + view slide system
+   Direction controlled by data-qs-dir on .qs-body (set by JS):
+     forward  →  new view enters from the right
+     back     →  new view enters from the left
+   ============================================================================= */
 
 .qs-body {
     position: relative;
@@ -245,22 +260,68 @@
     overflow-y: auto;
     opacity: 1;
     transform: translateX(0);
-    transition: transform var(--qs-duration) var(--qs-ease),
+    transition:
+        transform var(--qs-duration) var(--qs-ease),
         opacity var(--qs-duration) var(--qs-ease);
+    will-change: transform, opacity;
 }
 
+/* Default hidden state — off to the right */
 .qs-view[hidden] {
     display: block !important;
     opacity: 0;
     pointer-events: none;
-    transform: translateX(16px);
+    transform: translateX(100%);
     visibility: hidden;
 }
 
+/* Navigating back: outgoing view exits left */
+.qs-body[data-qs-dir="back"] .qs-view[hidden] {
+    transform: translateX(-100%);
+}
+
+/* Incoming view animations */
+.qs-body[data-qs-dir="back"] .qs-view:not([hidden]) {
+    animation: qs-slide-from-left var(--qs-duration) var(--qs-ease) both;
+}
+
+.qs-body[data-qs-dir="forward"] .qs-view:not([hidden]) {
+    animation: qs-slide-from-right var(--qs-duration) var(--qs-ease) both;
+}
+
+@keyframes qs-slide-from-left {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes qs-slide-from-right {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+
+/* =============================================================================
+   Typography helpers
+   ============================================================================= */
+
 .qs-heading {
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 600;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--qs-muted);
     margin: 6px 0 12px;
@@ -270,7 +331,10 @@
     margin-top: 18px;
 }
 
-/* Category grid */
+
+/* =============================================================================
+   Category grid (home view)
+   ============================================================================= */
 
 .qs-grid {
     list-style: none;
@@ -294,7 +358,8 @@
     cursor: pointer;
     text-align: center;
     color: var(--qs-text);
-    transition: border-color var(--qs-duration) var(--qs-ease),
+    transition:
+        border-color var(--qs-duration) var(--qs-ease),
         transform var(--qs-duration) var(--qs-ease),
         box-shadow var(--qs-duration) var(--qs-ease);
 }
@@ -322,7 +387,10 @@
     line-height: 1.3;
 }
 
-/* Question list */
+
+/* =============================================================================
+   Question list (home + category views)
+   ============================================================================= */
 
 .qs-list {
     list-style: none;
@@ -345,7 +413,8 @@
     cursor: pointer;
     text-align: left;
     color: var(--qs-text);
-    transition: border-color var(--qs-duration) var(--qs-ease),
+    transition:
+        border-color var(--qs-duration) var(--qs-ease),
         transform var(--qs-duration) var(--qs-ease);
 }
 
@@ -385,8 +454,66 @@
 }
 
 
+/* =============================================================================
+   Answer view
+   ============================================================================= */
 
+.qs-view-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin: 6px 0 16px;
+}
 
+.qs-view-header__content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.qs-view-title {
+    font-size: 19px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--qs-text);
+    margin: 0;
+}
+
+.qs-back-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    background: none;
+    border: 1px solid var(--qs-border);
+    border-radius: 8px;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    color: var(--qs-muted);
+    transition:
+        color var(--qs-duration) var(--qs-ease),
+        border-color var(--qs-duration) var(--qs-ease);
+}
+
+.qs-back-icon:hover {
+    color: var(--qs-text);
+    border-color: var(--qs-accent);
+}
+
+.qs-back-icon:focus-visible {
+    outline: 2px solid var(--qs-accent);
+    outline-offset: 2px;
+}
+
+.qs-back-icon>svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* Category breadcrumb button */
 .qs-answer__category {
     display: inline-block;
     background: none;
@@ -411,63 +538,15 @@
     border-radius: 4px;
 }
 
-.qs-back-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 36px;
-    height: 36px;
-    flex-shrink: 0;
-    background: none;
-    border: 1px solid var(--qs-border);
-    border-radius: 8px;
-    padding: 0;
-    margin: 0;
-    cursor: pointer;
-    color: var(--qs-muted);
-    transition: color var(--qs-duration) var(--qs-ease), border-color var(--qs-duration) var(--qs-ease);
-}
-
-.qs-view-header {
-    display: flex;
-    align-items: flex-start;
-    gap: 14px;
-    margin: 6px 0 16px;
-}
-
-.qs-view-header__content {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-.qs-view-title {
-    font-size: 19px;
-    font-weight: 700;
-    line-height: 1.3;
-    color: var(--qs-text);
-    margin: 0;
-}
-
-.qs-back-icon:hover {
-    color: var(--qs-text);
-    border-color: var(--qs-accent);
-}
-
-.qs-back-icon:focus-visible {
-    outline: 2px solid var(--qs-accent);
-    outline-offset: 2px;
-}
-
-.qs-back-icon>svg {
-    width: 18px;
-    height: 18px;
-}
-
+/* Answer body */
 .qs-answer__body {
     font-size: 14px;
     line-height: 1.55;
     color: var(--qs-text);
+    background: var(--qs-panel-bg);
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid var(--qs-border);
 }
 
 .qs-answer__body p {
@@ -480,9 +559,39 @@
 
 .qs-answer__body a {
     color: var(--qs-accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
 }
 
-/* Pager */
+/* Staggered entrance — JS toggles .is-entering on the answer view */
+@keyframes qs-fade-up {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+[data-qs-view="answer"].is-entering .qs-view-header {
+    animation: qs-fade-up 280ms var(--qs-ease) 40ms both;
+}
+
+[data-qs-view="answer"].is-entering .qs-answer__body {
+    animation: qs-fade-up 280ms var(--qs-ease) 80ms both;
+}
+
+[data-qs-view="answer"].is-entering .qs-pager {
+    animation: qs-fade-up 280ms var(--qs-ease) 120ms both;
+}
+
+
+/* =============================================================================
+   Pager (prev / next within a category)
+   ============================================================================= */
 
 .qs-pager {
     display: flex;
@@ -512,19 +621,20 @@
     color: var(--qs-accent);
 }
 
+.qs-pager__link[hidden] {
+    display: none;
+}
+
 .qs-pager__link:focus-visible {
     outline: 2px solid var(--qs-accent);
     outline-offset: 2px;
-}
-
-.qs-pager__link[hidden] {
-    display: none;
 }
 
 .qs-pager__link>svg {
     width: 14px;
     height: 14px;
     flex-shrink: 0;
+    transition: transform var(--qs-duration) var(--qs-ease);
 }
 
 .qs-pager__link span {
@@ -535,6 +645,20 @@
     white-space: nowrap;
 }
 
+/* Arrow nudge on hover */
+.qs-pager__link[data-qs-prev]:hover>svg {
+    transform: translateX(-4px);
+}
+
+.qs-pager__link[data-qs-next]:hover>svg {
+    transform: translateX(4px);
+}
+
+
+/* =============================================================================
+   Empty state
+   ============================================================================= */
+
 .qs-empty {
     font-size: 13px;
     color: var(--qs-muted);
@@ -542,36 +666,11 @@
     padding: 14px 0;
 }
 
-.qs-strip {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    padding: 14px 16px;
-    /* back to original, no extra padding needed */
-    background: var(--qs-strip-bg);
-    color: var(--qs-strip-color);
-    border-radius: var(--qs-radius) var(--qs-radius) 0 0;
-}
 
-/* ADD THIS RIGHT AFTER qs-strip */
-.qs-wave {
-    width: 100%;
-    line-height: 0;
-    flex-shrink: 0;
-    margin-top: -1px;
-}
+/* =============================================================================
+   Mobile  (≤ 480px) — full-width bottom sheet
+   ============================================================================= */
 
-.qs-wave svg {
-    display: block;
-    width: 100%;
-    height: 30px;
-}
-
-/* Mobile */
-/* Mobile */
-/* Mobile */
-/* Mobile */
 @media (max-width: 480px) {
     .qs-widget {
         left: 0;
@@ -580,12 +679,14 @@
         width: 100%;
     }
 
+    /* Keep launcher pinned at its configured offset */
     .qs-launcher {
         position: fixed;
         left: var(--qs-offset-x);
         bottom: var(--qs-offset-y);
     }
 
+    /* Panel becomes a full-width bottom sheet */
     .qs-panel {
         position: fixed;
         left: 0;
@@ -598,6 +699,8 @@
         border-radius: var(--qs-radius) var(--qs-radius) 0 0;
         transform-origin: bottom center;
         transform: translateY(100%);
+        opacity: 1;
+        /* override desktop fade — we slide instead */
     }
 
     .qs-widget.is-open .qs-panel {
@@ -605,7 +708,10 @@
     }
 }
 
-/* Reduced motion */
+
+/* =============================================================================
+   Reduced motion — respect prefers-reduced-motion
+   ============================================================================= */
 
 @media (prefers-reduced-motion: reduce) {
 

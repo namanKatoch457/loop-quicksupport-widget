@@ -1,34 +1,40 @@
 {% comment %}
-  Quick Support Widget
-  Floating launcher + panel with FAQs, contact links, and featured questions.
-  All content is managed through section settings and blocks below.
+  quick-support.liquid
+  Floating support widget — circular launcher + slide-up panel.
+
+  Block types:
+    - category  : defines a topic group (title + icon)
+    - question  : belongs to a category (matched by title string)
+
+  Note: category↔question link is by title string, not ID.
+  Trade-off: simpler schema, but merchant must spell category name
+  exactly the same in both blocks. Explained in the customisation guide.
 {% endcomment %}
 
-{%- liquid
-  assign categories = section.blocks | where: 'type', 'category'
-  assign questions = section.blocks | where: 'type', 'question'
-  assign s = section.settings
--%}
+{%- assign categories = section.blocks | where: 'type', 'category' -%}
+{%- assign questions = section.blocks | where: 'type', 'question' -%}
+{%- assign s = section.settings -%}
 
 {%- if s.launcher_enabled -%}
   <div
     class="qs-widget"
     data-quick-support
     style="
-      --qs-launcher-bg: {{ s.launcher_bg }};
+      --qs-launcher-bg:    {{ s.launcher_bg }};
       --qs-launcher-color: {{ s.launcher_icon_color }};
-      --qs-launcher-size: {{ s.launcher_size }}px;
-      --qs-offset-x: {{ s.launcher_offset_x }}px;
-      --qs-offset-y: {{ s.launcher_offset_y }}px;
-      --qs-strip-bg: {{ s.contact_strip_bg }};
-      --qs-strip-color: {{ s.contact_icon_color }};
-      --qs-panel-bg: {{ s.panel_bg }};
-      --qs-text: {{ s.text_color }};
-      --qs-muted: {{ s.muted_text_color }};
-      --qs-accent: {{ s.accent_color }};
-      --qs-radius: {{ s.panel_radius }}px;
+      --qs-launcher-size:  {{ s.launcher_size }}px;
+      --qs-offset-x:       {{ s.launcher_offset_x }}px;
+      --qs-offset-y:       {{ s.launcher_offset_y }}px;
+      --qs-strip-bg:       {{ s.contact_strip_bg }};
+      --qs-strip-color:    {{ s.contact_icon_color }};
+      --qs-panel-bg:       {{ s.panel_bg }};
+      --qs-text:           {{ s.text_color }};
+      --qs-muted:          {{ s.muted_text_color }};
+      --qs-accent:         {{ s.accent_color }};
+      --qs-radius:         {{ s.panel_radius }}px;
     "
   >
+    {{- '<!-- launcher -->' }}
     <button
       type="button"
       class="qs-launcher"
@@ -36,15 +42,22 @@
       aria-haspopup="dialog"
       aria-expanded="false"
       aria-controls="qs-panel"
-      aria-label="Open support"
+      aria-label="Open support panel"
     >
       {%- if s.launcher_icon != blank -%}
-        <img src="{{ s.launcher_icon | image_url: width: 80 }}" alt="" loading="lazy" width="32" height="32">
+        <img
+          src="{{ s.launcher_icon | image_url: width: 80 }}"
+          alt=""
+          loading="lazy"
+          width="32"
+          height="32"
+        >
       {%- else -%}
         {%- render 'qs-icon', name: 'headset' -%}
       {%- endif -%}
     </button>
 
+    {{- '<!-- panel -->' }}
     <div
       id="qs-panel"
       class="qs-panel"
@@ -52,9 +65,9 @@
       aria-modal="true"
       aria-labelledby="qs-panel-title"
       data-qs-panel
-      data-qs-back-label="{{ s.back_label | escape }}"
       hidden
     >
+      {{- '<!-- contact strip -->' }}
       <div class="qs-strip">
         <div class="qs-strip__contacts">
           {%- if s.show_phone and s.phone_number != blank -%}
@@ -73,7 +86,7 @@
               class="qs-strip__btn"
               href="https://wa.me/{{ s.whatsapp_number }}"
               target="_blank"
-              rel="noopener"
+              rel="noopener noreferrer"
               data-qs-tooltip="{{ s.whatsapp_tooltip }}"
               aria-label="{{ s.whatsapp_tooltip }}"
             >
@@ -85,7 +98,7 @@
             <a
               class="qs-strip__btn"
               href="mailto:{{ s.email_address }}"
-              data-qs-tooltip="{{ s.email_address }}"
+              data-qs-tooltip="{{ s.email_tooltip }}"
               aria-label="{{ s.email_tooltip }}"
             >
               {%- render 'qs-icon', name: 'mail' -%}
@@ -93,18 +106,26 @@
           {%- endif -%}
         </div>
 
-        <button type="button" class="qs-strip__close" data-qs-close aria-label="{{ s.close_label }}">
+        <button
+          type="button"
+          class="qs-strip__close"
+          data-qs-close
+          aria-label="Close support panel"
+        >
           {%- render 'qs-icon', name: 'close' -%}
         </button>
       </div>
-      <div class="qs-wave">
+
+      {{- '<!-- decorative wave between strip and body -->' }}
+      <div class="qs-wave" aria-hidden="true">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 30" preserveAspectRatio="none">
-          <path d="M0,0 C80,18 150,18 190,10 C230,2 300,2 380,18 L380,0 Z" fill="var(--qs-strip-bg)"/>
-          <path d="M0,0 C80,18 150,18 190,10 C230,2 300,2 380,18 L380,30 L0,30 Z" fill="var(--qs-panel-bg)"/>
+          <path d="M0,0 C80,22 150,22 190,12 C230,2 300,2 380,22 L380,0 Z"        fill="var(--qs-strip-bg)"/>
+          <path d="M0,0 C80,22 150,22 190,12 C230,2 300,2 380,22 L380,30 L0,30 Z" fill="var(--qs-panel-bg)"/>
         </svg>
       </div>
 
       <div class="qs-body">
+        {{- '<!-- home view: category grid + featured questions -->' }}
         <div class="qs-view" data-qs-view="home">
           <h2 id="qs-panel-title" class="qs-heading">{{ s.categories_heading }}</h2>
 
@@ -117,7 +138,9 @@
                     class="qs-cat"
                     data-qs-open-category="{{ cat.settings.title | escape }}"
                   >
-                    <span class="qs-cat__icon">{%- render 'qs-icon', name: cat.settings.icon -%}</span>
+                    <span class="qs-cat__icon">
+                      {%- render 'qs-icon', name: cat.settings.icon -%}
+                    </span>
                     <span class="qs-cat__title">{{ cat.settings.title }}</span>
                   </button>
                 </li>
@@ -127,13 +150,20 @@
             <p class="qs-empty">{{ s.empty_state }}</p>
           {%- endif -%}
 
+          {{- '<!-- JS fills this from the JSON template; see quick-support.js -->' }}
           <h2 class="qs-heading">{{ s.general_heading }}</h2>
           <ul class="qs-list" role="list" data-qs-featured-list></ul>
         </div>
 
+        {{- '<!-- category view: question list for one topic -->' }}
         <div class="qs-view" data-qs-view="category" hidden>
           <div class="qs-view-header">
-            <button type="button" class="qs-back-icon" data-qs-back aria-label="{{ s.back_label | escape }}">
+            <button
+              type="button"
+              class="qs-back-icon"
+              data-qs-back
+              aria-label="Back to all topics"
+            >
               {%- render 'qs-icon', name: 'chevron-left' -%}
             </button>
             <h2 class="qs-view-title" data-qs-category-title></h2>
@@ -141,22 +171,31 @@
           <ul class="qs-list" data-qs-category-list role="list"></ul>
         </div>
 
+        {{- '<!-- answer view: single question + answer -->' }}
         <div class="qs-view" data-qs-view="answer" hidden>
           <div class="qs-view-header">
             <button
               type="button"
               class="qs-back-icon"
               data-qs-back-to-category
-              aria-label="{{ s.back_label | escape }}"
+              aria-label="Go back"
             >
               {%- render 'qs-icon', name: 'chevron-left' -%}
             </button>
             <div class="qs-view-header__content">
               <h3 class="qs-view-title" data-qs-answer-question></h3>
-              <button type="button" class="qs-answer__category" data-qs-answer-category></button>
+              {{- '<!-- clicking this label jumps back to that category list -->' }}
+              <button
+                type="button"
+                class="qs-answer__category"
+                data-qs-answer-category
+              ></button>
             </div>
           </div>
+
           <div class="qs-answer__body" data-qs-answer-body></div>
+
+          {{- '<!-- prev/next navigation within a category -->' }}
           <div class="qs-pager">
             <button type="button" class="qs-pager__link" data-qs-prev hidden>
               {%- render 'qs-icon', name: 'chevron-left' -%}
@@ -169,22 +208,31 @@
           </div>
         </div>
 
+        {{- '<!-- category→icon map for JS -->' }}
         <script type="application/json" data-qs-categories>
           [
             {%- for cat in categories -%}
-              {"title": {{ cat.settings.title | json }}, "icon": {{ cat.settings.icon | json }}}{% unless forloop.last %},{% endunless %}
+              {"title":{{ cat.settings.title | json }},"icon":{{ cat.settings.icon | json }}}
+              {%- unless forloop.last -%},{%- endunless -%}
             {%- endfor -%}
           ]
         </script>
 
+        {{- '<!-- question data for JS; lives in a template so it is inert HTML -->' }}
         <template data-qs-questions>
           {%- for q in questions -%}
+            {%- comment -%}
+              We look up the parent category here so the icon travels
+              with the question data — avoids a second lookup in JS.
+            {%- endcomment -%}
+            {%- assign parent_cat = categories | where: 'settings.title', q.settings.category_title | first -%}
             <script type="application/json" data-qs-q-id="{{ q.id }}">
               {
-                "id": {{ q.id | json }},
+                "id":       {{ q.id | json }},
                 "category": {{ q.settings.category_title | json }},
+                "icon":     {{ parent_cat.settings.icon | default: 'info' | json }},
                 "question": {{ q.settings.question | json }},
-                "answer": {{ q.settings.answer | json }},
+                "answer":   {{ q.settings.answer | json }},
                 "featured": {{ q.settings.featured | json }}
               }
             </script>
@@ -195,8 +243,16 @@
   </div>
 {%- endif -%}
 
-<link rel="stylesheet" href="{{ 'quick-support.css' | asset_url }}" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="{{ 'quick-support.css' | asset_url }}"></noscript>
+{{- '<!-- load CSS async; noscript fallback ensures it still loads without JS -->' }}
+<link
+  rel="stylesheet"
+  href="{{ 'quick-support.css' | asset_url }}"
+  media="print"
+  onload="this.media='all'"
+>
+<noscript>
+  <link rel="stylesheet" href="{{ 'quick-support.css' | asset_url }}">
+</noscript>
 <script src="{{ 'quick-support.js' | asset_url }}" defer></script>
 
 {% schema %}
@@ -218,25 +274,25 @@
     {
       "type": "image_picker",
       "id": "launcher_icon",
-      "label": "Launcher icon (optional)",
-      "info": "Leave empty to use the default headset icon."
+      "label": "Custom launcher icon",
+      "info": "Leave blank to use the default headset icon."
     },
     {
       "type": "color",
       "id": "launcher_bg",
-      "label": "Launcher background",
+      "label": "Button background",
       "default": "#4F46E5"
     },
     {
       "type": "color",
       "id": "launcher_icon_color",
-      "label": "Launcher icon color",
+      "label": "Icon colour",
       "default": "#FFFFFF"
     },
     {
       "type": "range",
       "id": "launcher_size",
-      "label": "Launcher size",
+      "label": "Button size",
       "min": 48,
       "max": 80,
       "step": 4,
@@ -246,7 +302,7 @@
     {
       "type": "range",
       "id": "launcher_offset_x",
-      "label": "Offset from left edge",
+      "label": "Distance from left edge",
       "min": 12,
       "max": 48,
       "step": 4,
@@ -256,14 +312,13 @@
     {
       "type": "range",
       "id": "launcher_offset_y",
-      "label": "Offset from bottom edge",
+      "label": "Distance from bottom edge",
       "min": 12,
       "max": 48,
       "step": 4,
       "unit": "px",
       "default": 24
     },
-
     {
       "type": "header",
       "content": "Contact strip"
@@ -277,13 +332,13 @@
     {
       "type": "color",
       "id": "contact_icon_color",
-      "label": "Icon color",
+      "label": "Icon colour",
       "default": "#FFFFFF"
     },
     {
       "type": "checkbox",
       "id": "show_phone",
-      "label": "Show phone",
+      "label": "Show phone button",
       "default": true
     },
     {
@@ -295,31 +350,32 @@
     {
       "type": "text",
       "id": "phone_tooltip",
-      "label": "Phone tooltip",
+      "label": "Phone tooltip text",
       "default": "Call us"
     },
     {
       "type": "checkbox",
       "id": "show_whatsapp",
-      "label": "Show WhatsApp",
+      "label": "Show WhatsApp button",
       "default": true
     },
     {
       "type": "text",
       "id": "whatsapp_number",
-      "label": "WhatsApp number (with country code, no +)",
+      "label": "WhatsApp number",
+      "info": "Include country code, no + sign. e.g. 919876543210",
       "default": "919876543210"
     },
     {
       "type": "text",
       "id": "whatsapp_tooltip",
-      "label": "WhatsApp tooltip",
+      "label": "WhatsApp tooltip text",
       "default": "Chat on WhatsApp"
     },
     {
       "type": "checkbox",
       "id": "show_email",
-      "label": "Show email",
+      "label": "Show email button",
       "default": true
     },
     {
@@ -331,13 +387,12 @@
     {
       "type": "text",
       "id": "email_tooltip",
-      "label": "Email tooltip",
+      "label": "Email tooltip text",
       "default": "Email us"
     },
-
     {
       "type": "header",
-      "content": "Theme"
+      "content": "Panel theme"
     },
     {
       "type": "color",
@@ -348,19 +403,19 @@
     {
       "type": "color",
       "id": "text_color",
-      "label": "Text color",
+      "label": "Body text",
       "default": "#111827"
     },
     {
       "type": "color",
       "id": "muted_text_color",
-      "label": "Muted text color",
+      "label": "Muted text",
       "default": "#6B7280"
     },
     {
       "type": "color",
       "id": "accent_color",
-      "label": "Accent color",
+      "label": "Accent colour",
       "default": "#4F46E5"
     },
     {
@@ -373,45 +428,26 @@
       "unit": "px",
       "default": 16
     },
-
     {
       "type": "header",
-      "content": "Copy"
-    },
-    {
-      "type": "text",
-      "id": "panel_title",
-      "label": "Panel title",
-      "default": "How can we help?"
+      "content": "Labels"
     },
     {
       "type": "text",
       "id": "categories_heading",
-      "label": "Categories heading",
+      "label": "Topics heading",
       "default": "Browse topics"
     },
     {
       "type": "text",
       "id": "general_heading",
-      "label": "General queries heading",
+      "label": "Featured questions heading",
       "default": "General queries"
     },
     {
       "type": "text",
-      "id": "back_label",
-      "label": "Back button label",
-      "default": "Back"
-    },
-    {
-      "type": "text",
-      "id": "close_label",
-      "label": "Close button label",
-      "default": "Close"
-    },
-    {
-      "type": "text",
       "id": "empty_state",
-      "label": "Empty state text",
+      "label": "No-categories message",
       "default": "No questions yet. Check back soon."
     }
   ],
@@ -424,7 +460,7 @@
         {
           "type": "text",
           "id": "title",
-          "label": "Category title",
+          "label": "Category name",
           "default": "Shipping & Delivery"
         },
         {
@@ -435,25 +471,25 @@
           "options": [
             { "value": "truck", "label": "Truck" },
             { "value": "box", "label": "Box" },
-            { "value": "refresh", "label": "Refresh" },
-            { "value": "info", "label": "Info" },
+            { "value": "refresh", "label": "Returns" },
+            { "value": "tag", "label": "Tag" },
+            { "value": "shield", "label": "Shield" },
             { "value": "globe", "label": "Globe" },
             { "value": "phone", "label": "Phone" },
-            { "value": "tag", "label": "Tag" },
-            { "value": "shield", "label": "Shield" }
+            { "value": "info", "label": "Info" }
           ]
         }
       ]
     },
     {
       "type": "question",
-      "name": "Question",
+      "name": "FAQ Question",
       "settings": [
         {
           "type": "text",
           "id": "category_title",
-          "label": "Belongs to category",
-          "info": "Type the exact title of the category this question belongs to."
+          "label": "Category",
+          "info": "Must match a category name exactly — spelling and capitalisation matter."
         },
         {
           "type": "text",
@@ -462,15 +498,17 @@
           "default": "How long does it take to receive an order?"
         },
         {
-          "type": "richtext",
+          "type": "html",
           "id": "answer",
           "label": "Answer",
+          "info": "Basic HTML supported: <strong>, <a href>, <p> etc.",
           "default": "<p>Orders are usually delivered within 5–7 business days.</p>"
         },
         {
           "type": "checkbox",
           "id": "featured",
-          "label": "Featured (show in General Queries and on home page)",
+          "label": "Show in featured queries",
+          "info": "Tick this to surface the question on the home panel view.",
           "default": false
         }
       ]
