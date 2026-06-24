@@ -16,9 +16,35 @@
 {%- assign s = section.settings -%}
 
 {%- if s.launcher_enabled -%}
+  {%- if s.use_custom_font -%}
+    {%- style -%}
+      {{ s.widget_font | font_face: font_display: 'swap' }}
+      {%- assign widget_font_bold = s.widget_font | font_modify: 'weight', 'bold' -%}
+      {%- if widget_font_bold -%}
+        {{ widget_font_bold | font_face: font_display: 'swap' }}
+      {%- endif -%}
+      {%- assign widget_font_italic = s.widget_font | font_modify: 'style', 'italic' -%}
+      {%- if widget_font_italic -%}
+        {{ widget_font_italic | font_face: font_display: 'swap' }}
+      {%- endif -%}
+
+      .qs-widget,
+      .qs-widget button,
+      .qs-widget input,
+      .qs-widget textarea,
+      .qs-widget select {
+        font-family: {{ s.widget_font.family }}, {{ s.widget_font.fallback_families }} !important;
+        font-style: {{ s.widget_font.style }} !important;
+        font-weight: {{ s.widget_font.weight }} !important;
+      }
+    {%- endstyle -%}
+  {%- endif -%}
+
   <div
     class="qs-widget"
     data-quick-support
+    data-qs-back-label="{{ s.back_label | default: 'Back' | escape }}"
+    data-qs-helpful-thanks="{{ s.helpful_thanks | default: 'Thanks for your feedback!' | escape }}"
     style="
       --qs-launcher-bg:    {{ s.launcher_bg }};
       --qs-launcher-color: {{ s.launcher_icon_color }};
@@ -205,6 +231,22 @@
               {%- render 'qs-icon', name: 'chevron-right' -%}
               <span data-qs-next-label></span>
             </button>
+          </div>
+
+          {{- '<!-- was this helpful? -->' }}
+          <div class="qs-helpful" data-qs-helpful>
+            <p class="qs-helpful__label">{{ s.helpful_label | default: 'Was this helpful?' }}</p>
+            <div class="qs-helpful__vote" data-qs-helpful-vote>
+              <button type="button" class="qs-helpful__btn" data-qs-helpful-btn="yes" aria-label="{{ s.helpful_yes | default: 'Yes' }}">
+                {%- render 'qs-icon', name: 'thumbs-up' -%}
+                <span>{{ s.helpful_yes | default: 'Yes' }}</span>
+              </button>
+              <button type="button" class="qs-helpful__btn" data-qs-helpful-btn="no" aria-label="{{ s.helpful_no | default: 'No' }}">
+                {%- render 'qs-icon', name: 'thumbs-down' -%}
+                <span>{{ s.helpful_no | default: 'No' }}</span>
+              </button>
+            </div>
+            <p class="qs-helpful__thanks" data-qs-helpful-thanks hidden></p>
           </div>
         </div>
 
@@ -430,6 +472,23 @@
     },
     {
       "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "widget_font",
+      "label": "Widget font override",
+      "default": "assistant_n4",
+      "info": "Choose a custom font to override the default theme font."
+    },
+    {
+      "type": "checkbox",
+      "id": "use_custom_font",
+      "label": "Use custom font override",
+      "default": false
+    },
+    {
+      "type": "header",
       "content": "Labels"
     },
     {
@@ -449,6 +508,36 @@
       "id": "empty_state",
       "label": "No-categories message",
       "default": "No questions yet. Check back soon."
+    },
+    {
+      "type": "text",
+      "id": "back_label",
+      "label": "Back button label",
+      "default": "Back"
+    },
+    {
+      "type": "text",
+      "id": "helpful_label",
+      "label": "\"Was this helpful?\" prompt",
+      "default": "Was this helpful?"
+    },
+    {
+      "type": "text",
+      "id": "helpful_yes",
+      "label": "Positive feedback label",
+      "default": "Yes"
+    },
+    {
+      "type": "text",
+      "id": "helpful_no",
+      "label": "Negative feedback label",
+      "default": "No"
+    },
+    {
+      "type": "text",
+      "id": "helpful_thanks",
+      "label": "Thank-you message after feedback",
+      "default": "Thanks for your feedback!"
     }
   ],
 

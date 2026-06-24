@@ -1,0 +1,371 @@
+{%- assign s = section.settings -%}
+
+{%- if s.use_custom_font -%}
+  {%- style -%}
+    {{ s.section_font | font_face: font_display: 'swap' }}
+    {%- assign section_font_bold = s.section_font | font_modify: 'weight', 'bold' -%}
+    {%- if section_font_bold -%}
+      {{ section_font_bold | font_face: font_display: 'swap' }}
+    {%- endif -%}
+
+    #qs-featured-{{ section.id }} {
+      font-family: {{ s.section_font.family }}, {{ s.section_font.fallback_families }} !important;
+    }
+    #qs-featured-{{ section.id }} button {
+      font-family: {{ s.section_font.family }}, {{ s.section_font.fallback_families }} !important;
+    }
+  {%- endstyle -%}
+{%- endif -%}
+
+<style>
+  .qsf-wrap {
+    background: {{ s.bg_color }};
+    padding: {{ s.vertical_padding }}px 24px;
+  }
+
+  .qsf-inner {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .qsf-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .qsf-title {
+    font-size: clamp(22px, 4vw, 34px);
+    font-weight: 700;
+    color: {{ s.text_color }};
+    margin: 0 0 10px;
+    line-height: 1.25;
+  }
+
+  .qsf-subtitle {
+    font-size: 16px;
+    color: {{ s.muted_color }};
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  .qsf-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+    gap: 14px;
+  }
+
+  .qsf-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: {{ s.card_bg }};
+    border: 1.5px solid rgba(15, 23, 42, 0.08);
+    border-radius: 14px;
+    padding: 18px 16px;
+    text-align: left;
+    cursor: pointer;
+    width: 100%;
+    font: inherit;
+    transition:
+      border-color 240ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform    240ms cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow   240ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .qsf-card:hover {
+    border-color: {{ s.accent_color }};
+    transform: translateY(-3px);
+    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.09);
+  }
+
+  .qsf-card:focus-visible {
+    outline: 2px solid {{ s.accent_color }};
+    outline-offset: 2px;
+  }
+
+  .qsf-card__icon {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    color: {{ s.accent_color }};
+  }
+
+  .qsf-card__icon .qs-icon {
+    width: 100%;
+    height: 100%;
+  }
+
+  .qsf-card__body {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .qsf-card__q {
+    font-size: 14px;
+    font-weight: 500;
+    color: {{ s.text_color }};
+    line-height: 1.4;
+  }
+
+  .qsf-card__cat {
+    font-size: 12px;
+    color: {{ s.muted_color }};
+  }
+
+  .qsf-card__arrow {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    color: {{ s.accent_color }};
+    opacity: 0;
+    transform: translateX(-6px);
+    transition:
+      opacity   240ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 240ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .qsf-card:hover .qsf-card__arrow {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .qsf-empty {
+    text-align: center;
+    color: {{ s.muted_color }};
+    font-size: 14px;
+    padding: 24px 0;
+  }
+
+  @media (max-width: 480px) {
+    .qsf-wrap {
+      padding: {{ s.vertical_padding | divided_by: 1.5 | round }}px 16px;
+    }
+
+    .qsf-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .qsf-header {
+      margin-bottom: 28px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .qsf-card,
+    .qsf-card__arrow {
+      transition: none !important;
+    }
+  }
+</style>
+
+<section
+  class="qsf-wrap"
+  id="qs-featured-{{ section.id }}"
+  aria-labelledby="qsf-title-{{ section.id }}"
+>
+  <div class="qsf-inner">
+
+    {%- if s.heading != blank or s.subheading != blank -%}
+      <header class="qsf-header">
+        {%- if s.heading != blank -%}
+          <h2 class="qsf-title" id="qsf-title-{{ section.id }}">{{ s.heading | escape }}</h2>
+        {%- endif -%}
+        {%- if s.subheading != blank -%}
+          <p class="qsf-subtitle">{{ s.subheading | escape }}</p>
+        {%- endif -%}
+      </header>
+    {%- endif -%}
+
+    <div
+      class="qsf-grid"
+      data-qsf-grid
+      role="list"
+      aria-live="polite"
+      aria-label="Featured questions"
+    ></div>
+
+  </div>
+</section>
+
+<script>
+(function () {
+  var MAX = {{ s.max_per_category | default: 2 }};
+
+  function esc(str) {
+    return String(str).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  function render(data) {
+    var questions = (data && data.questions) || [];
+    var icons     = (data && data.icons)     || {};
+
+    // Filter to featured only, then take at most MAX per category
+    var seen   = {};
+    var toShow = [];
+    questions.forEach(function (q) {
+      if (!q.featured) return;
+      seen[q.category] = (seen[q.category] || 0);
+      if (seen[q.category] < MAX) {
+        toShow.push(q);
+        seen[q.category]++;
+      }
+    });
+
+    var grid = document.querySelector('[data-qsf-grid]');
+    if (!grid) return;
+
+    if (!toShow.length) {
+      grid.innerHTML = '<p class="qsf-empty">No featured questions yet.</p>';
+      return;
+    }
+
+    var arrowSvg = '<svg class="qsf-card__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
+
+    grid.innerHTML = toShow.map(function (q) {
+      var iconSvg = icons[q.icon] || icons['info'] || '';
+      return (
+        '<div role="listitem">' +
+          '<button type="button" class="qsf-card"' +
+            ' data-qsf-id="' + esc(String(q.id)) + '"' +
+            ' data-qsf-cat="' + esc(q.category) + '"' +
+            ' aria-label="' + esc(q.question) + ' — ' + esc(q.category) + '">' +
+            '<span class="qsf-card__icon" aria-hidden="true">' + iconSvg + '</span>' +
+            '<span class="qsf-card__body">' +
+              '<span class="qsf-card__q">' + esc(q.question) + '</span>' +
+              '<span class="qsf-card__cat">' + esc(q.category) + '</span>' +
+            '</span>' +
+            arrowSvg +
+          '</button>' +
+        '</div>'
+      );
+    }).join('');
+
+    // Delegated click → open widget to that question's answer
+    grid.addEventListener('click', function (e) {
+      var btn = e.target.closest('[data-qsf-id]');
+      if (!btn) return;
+      document.dispatchEvent(new CustomEvent('qs:open-question', {
+        bubbles: true,
+        detail: { id: btn.dataset.qsfId, category: btn.dataset.qsfCat }
+      }));
+    });
+  }
+
+  // The widget's quick-support.js (deferred) fires qs:ready after it processes
+  // question data. Our inline script sets up the listener first; if for any
+  // reason _qsData is already populated we fall back to that.
+  if (window._qsData) {
+    render(window._qsData);
+  } else {
+    window.addEventListener('qs:ready', function (e) { render(e.detail); }, { once: true });
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Featured Questions",
+  "tag": "section",
+  "class": "qs-featured-wrap",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Section heading",
+      "default": "Common Questions"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Section subheading",
+      "default": "Quick answers to things people often ask. Tap any question to read the full answer."
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "max_per_category",
+      "label": "Max questions per category",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "default": 2,
+      "info": "Questions marked 'featured' in the Quick Support widget settings will appear here."
+    },
+    {
+      "type": "range",
+      "id": "vertical_padding",
+      "label": "Section vertical padding",
+      "min": 24,
+      "max": 120,
+      "step": 8,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "header",
+      "content": "Colours"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Section background",
+      "default": "#EEF2FF"
+    },
+    {
+      "type": "color",
+      "id": "card_bg",
+      "label": "Card background",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text colour",
+      "default": "#111827"
+    },
+    {
+      "type": "color",
+      "id": "muted_color",
+      "label": "Muted text colour",
+      "default": "#6B7280"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent colour",
+      "default": "#4F46E5",
+      "info": "Used for icons, borders and arrows."
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "section_font",
+      "label": "Section font override",
+      "default": "assistant_n4",
+      "info": "Choose a custom font to override the default theme font."
+    },
+    {
+      "type": "checkbox",
+      "id": "use_custom_font",
+      "label": "Use custom font override",
+      "default": false
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured Questions"
+    }
+  ]
+}
+{% endschema %}

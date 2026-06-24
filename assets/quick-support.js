@@ -75,6 +75,12 @@
         return acc;
     }, {});
 
+    // Expose data for the standalone featured-questions section.
+    // The section's inline script listens for this event (or reads _qsData
+    // if the deferred script has already run by the time the listener registers).
+    window._qsData = { questions, icons: ICONS };
+    window.dispatchEvent(new CustomEvent('qs:ready', { detail: { questions, icons: ICONS } }));
+
     // -------------------------------------------------------------------------
     // State
     // -------------------------------------------------------------------------
@@ -82,7 +88,11 @@
     let lastFocus = null;
     let currentCategory = null;
     let currentQuestionIndex = -1;
-    let answerOrigin = 'home'; // 'home' | 'category' — affects back-button behaviour
+    let answerOrigin = 'home';
+
+    // Read merchant-configured copy from data attributes set by Liquid.
+    const backLabel      = widget.dataset.qsBackLabel    || 'Back';
+    const helpfulThanks  = widget.dataset.qsHelpfulThanks || 'Thanks for your feedback!';
 
     // View depth used to infer slide direction (forward vs back)
     const VIEW_ORDER = ['home', 'category', 'answer'];
@@ -182,13 +192,23 @@
         answerCategoryEl.dataset.qsOpenCategory = category;
         answerBodyEl.innerHTML = q.answer;
         updateBackLabel();
+        resetHelpful();
     }
 
     function updateBackLabel() {
         if (!backToCatBtn) return;
-
-        const label = answerOrigin === 'category' ? currentCategory : 'Back';
+        const label = answerOrigin === 'category' ? currentCategory : backLabel;
         backToCatBtn.setAttribute('aria-label', label);
+    }
+
+    function resetHelpful() {
+        const wrap = widget.querySelector('[data-qs-helpful]');
+        if (!wrap) return;
+        const voteEl  = wrap.querySelector('[data-qs-helpful-vote]');
+        const thanksEl = wrap.querySelector('[data-qs-helpful-thanks]');
+        wrap.querySelectorAll('[data-qs-helpful-btn]').forEach(b => b.classList.remove('is-active'));
+        if (voteEl)   { voteEl.hidden   = false; }
+        if (thanksEl) { thanksEl.hidden = true;  }
     }
 
     function updatePager(list) {
@@ -271,6 +291,15 @@
 
     closeBtn?.addEventListener('click', closePanel);
 
+    // Listen for open requests from the standalone featured-questions section.
+    document.addEventListener('qs:open-question', e => {
+        const { id, category } = e.detail || {};
+        if (!id) return;
+        if (!widget.classList.contains('is-open')) openPanel();
+        // Small delay so the panel finishes its open transition before navigating.
+        setTimeout(() => openQuestion(id, category, 'home'), 60);
+    });
+
     // Single delegated listener on the widget covers all dynamic content
     widget.addEventListener('click', e => {
 
@@ -302,6 +331,25 @@
 
         if (e.target.closest('[data-qs-prev]')) { step(-1); return; }
         if (e.target.closest('[data-qs-next]')) { step(1); return; }
+
+        const helpfulBtn = e.target.closest('[data-qs-helpful-btn]');
+        if (helpfulBtn) {
+            const wrap     = helpfulBtn.closest('[data-qs-helpful]');
+            const voteEl   = wrap?.querySelector('[data-qs-helpful-vote]');
+            const thanksEl = wrap?.querySelector('[data-qs-helpful-thanks]');
+            // Mark active state immediately for tactile feedback
+            wrap?.querySelectorAll('[data-qs-helpful-btn]').forEach(b => b.classList.remove('is-active'));
+            helpfulBtn.classList.add('is-active');
+            // Swap to thank-you message after a short pause
+            setTimeout(() => {
+                if (voteEl)   { voteEl.hidden = true; }
+                if (thanksEl) {
+                    thanksEl.textContent = helpfulThanks;
+                    thanksEl.hidden = false;
+                }
+            }, 420);
+            return;
+        }
     });
 
     function onKeydown(e) {

@@ -588,6 +588,81 @@
     animation: qs-fade-up 280ms var(--qs-ease) 120ms both;
 }
 
+[data-qs-view="answer"].is-entering .qs-helpful {
+    animation: qs-fade-up 280ms var(--qs-ease) 160ms both;
+}
+
+/* Was this helpful? */
+.qs-helpful {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--qs-border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.qs-helpful__label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--qs-muted);
+    margin: 0;
+}
+
+.qs-helpful__vote {
+    display: flex;
+    gap: 8px;
+}
+
+.qs-helpful__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 99px;
+    border: 1.5px solid var(--qs-border);
+    background: transparent;
+    color: var(--qs-muted);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition:
+        border-color var(--qs-duration) var(--qs-ease),
+        color        var(--qs-duration) var(--qs-ease),
+        background   var(--qs-duration) var(--qs-ease);
+}
+
+.qs-helpful__btn > svg {
+    width: 14px;
+    height: 14px;
+}
+
+.qs-helpful__btn:hover {
+    border-color: var(--qs-accent);
+    color: var(--qs-accent);
+}
+
+.qs-helpful__btn:focus-visible {
+    outline: 2px solid var(--qs-accent);
+    outline-offset: 2px;
+}
+
+.qs-helpful__btn.is-active {
+    background: var(--qs-accent);
+    border-color: var(--qs-accent);
+    color: #fff;
+}
+
+.qs-helpful__thanks {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--qs-accent);
+    margin: 0;
+    animation: qs-fade-up 260ms var(--qs-ease) both;
+}
+
 
 /* =============================================================================
    Pager (prev / next within a category)
