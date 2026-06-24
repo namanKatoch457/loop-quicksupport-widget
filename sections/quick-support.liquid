@@ -1,0 +1,356 @@
+{% comment %}
+  Quick Support Widget
+  Floating launcher + panel with FAQs, contact links, and featured questions.
+  All content is managed through section settings and blocks below.
+{% endcomment %}
+
+<div class="qs-widget" data-quick-support></div>
+
+{% schema %}
+{
+  "name": "Quick Support",
+  "tag": "section",
+  "class": "quick-support-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Launcher"
+    },
+    {
+      "type": "checkbox",
+      "id": "launcher_enabled",
+      "label": "Show launcher",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "launcher_icon",
+      "label": "Launcher icon (optional)",
+      "info": "Leave empty to use the default headset icon."
+    },
+    {
+      "type": "color",
+      "id": "launcher_bg",
+      "label": "Launcher background",
+      "default": "#4F46E5"
+    },
+    {
+      "type": "color",
+      "id": "launcher_icon_color",
+      "label": "Launcher icon color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "launcher_size",
+      "label": "Launcher size",
+      "min": 48,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "launcher_offset_x",
+      "label": "Offset from left edge",
+      "min": 12,
+      "max": 48,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "launcher_offset_y",
+      "label": "Offset from bottom edge",
+      "min": 12,
+      "max": 48,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    },
+
+    {
+      "type": "header",
+      "content": "Contact strip"
+    },
+    {
+      "type": "color",
+      "id": "contact_strip_bg",
+      "label": "Strip background",
+      "default": "#4F46E5"
+    },
+    {
+      "type": "color",
+      "id": "contact_icon_color",
+      "label": "Icon color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_phone",
+      "label": "Show phone",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "phone_number",
+      "label": "Phone number",
+      "default": "+91 98765 43210"
+    },
+    {
+      "type": "text",
+      "id": "phone_tooltip",
+      "label": "Phone tooltip",
+      "default": "Call us"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_whatsapp",
+      "label": "Show WhatsApp",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "whatsapp_number",
+      "label": "WhatsApp number (with country code, no +)",
+      "default": "919876543210"
+    },
+    {
+      "type": "text",
+      "id": "whatsapp_tooltip",
+      "label": "WhatsApp tooltip",
+      "default": "Chat on WhatsApp"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_email",
+      "label": "Show email",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "email_address",
+      "label": "Email address",
+      "default": "support@example.com"
+    },
+    {
+      "type": "text",
+      "id": "email_tooltip",
+      "label": "Email tooltip",
+      "default": "Email us"
+    },
+
+    {
+      "type": "header",
+      "content": "Theme"
+    },
+    {
+      "type": "color",
+      "id": "panel_bg",
+      "label": "Panel background",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#111827"
+    },
+    {
+      "type": "color",
+      "id": "muted_text_color",
+      "label": "Muted text color",
+      "default": "#6B7280"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent color",
+      "default": "#4F46E5"
+    },
+    {
+      "type": "range",
+      "id": "panel_radius",
+      "label": "Corner radius",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+
+    {
+      "type": "header",
+      "content": "Copy"
+    },
+    {
+      "type": "text",
+      "id": "panel_title",
+      "label": "Panel title",
+      "default": "How can we help?"
+    },
+    {
+      "type": "text",
+      "id": "categories_heading",
+      "label": "Categories heading",
+      "default": "Browse topics"
+    },
+    {
+      "type": "text",
+      "id": "general_heading",
+      "label": "General queries heading",
+      "default": "General queries"
+    },
+    {
+      "type": "text",
+      "id": "back_label",
+      "label": "Back button label",
+      "default": "Back"
+    },
+    {
+      "type": "text",
+      "id": "close_label",
+      "label": "Close button label",
+      "default": "Close"
+    },
+    {
+      "type": "text",
+      "id": "empty_state",
+      "label": "Empty state text",
+      "default": "No questions yet. Check back soon."
+    }
+  ],
+
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Category title",
+          "default": "Shipping & Delivery"
+        },
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "default": "truck",
+          "options": [
+            { "value": "truck", "label": "Truck" },
+            { "value": "box", "label": "Box" },
+            { "value": "refresh", "label": "Refresh" },
+            { "value": "info", "label": "Info" },
+            { "value": "globe", "label": "Globe" },
+            { "value": "phone", "label": "Phone" },
+            { "value": "tag", "label": "Tag" },
+            { "value": "shield", "label": "Shield" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "question",
+      "name": "Question",
+      "settings": [
+        {
+          "type": "text",
+          "id": "category_title",
+          "label": "Belongs to category",
+          "info": "Type the exact title of the category this question belongs to."
+        },
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "How long does it take to receive an order?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>Orders are usually delivered within 5–7 business days.</p>"
+        },
+        {
+          "type": "checkbox",
+          "id": "featured",
+          "label": "Featured (show in General Queries and on home page)",
+          "default": false
+        }
+      ]
+    }
+  ],
+
+  "presets": [
+    {
+      "name": "Quick Support",
+      "blocks": [
+        { "type": "category", "settings": { "title": "Shipping & Delivery", "icon": "truck" } },
+        { "type": "category", "settings": { "title": "Returns & Exchanges", "icon": "refresh" } },
+        { "type": "category", "settings": { "title": "Orders & Payments", "icon": "tag" } },
+        { "type": "category", "settings": { "title": "General Info", "icon": "info" } },
+
+        {
+          "type": "question",
+          "settings": {
+            "category_title": "Shipping & Delivery",
+            "question": "How long does it take to receive an order?",
+            "featured": true
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "category_title": "Shipping & Delivery",
+            "question": "How can I track my order?",
+            "featured": true
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "category_title": "Returns & Exchanges",
+            "question": "What is your return policy?",
+            "featured": true
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "category_title": "Returns & Exchanges",
+            "question": "How do I start an exchange?",
+            "featured": true
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "category_title": "Orders & Payments",
+            "question": "Which payment methods do you accept?",
+            "featured": true
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "category_title": "Orders & Payments",
+            "question": "Can I modify my order after placing it?",
+            "featured": true
+          }
+        },
+        {
+          "type": "question",
+          "settings": { "category_title": "General Info", "question": "Where are you based?", "featured": true }
+        },
+        {
+          "type": "question",
+          "settings": { "category_title": "General Info", "question": "Do you ship internationally?", "featured": true }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
