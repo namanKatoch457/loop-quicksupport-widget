@@ -36,6 +36,7 @@
         "button"
       ],
       "settings": {
+        "image": "shopify://shop_images/theme_cover_image.jpg",
         "image_overlay_opacity": 40,
         "image_height": "large",
         "image_behavior": "none",
@@ -295,12 +296,12 @@
       "name": "Quick Support",
       "settings": {
         "launcher_enabled": true,
-        "launcher_bg": "#a50000",
+        "launcher_bg": "#4F46E5",
         "launcher_icon_color": "#ffffff",
         "launcher_size": 60,
         "launcher_offset_x": 24,
         "launcher_offset_y": 24,
-        "contact_strip_bg": "#a50000",
+        "contact_strip_bg": "#4F46E5",
         "contact_icon_color": "#ffffff",
         "show_phone": true,
         "phone_number": "+91 98765 43210",
@@ -314,20 +315,42 @@
         "panel_bg": "#ffffff",
         "text_color": "#111827",
         "muted_text_color": "#6b7280",
-        "accent_color": "#a50000",
+        "accent_color": "#4F46E5",
         "panel_radius": 16,
-        "panel_title": "How can we help?",
+        "widget_font": "assistant_n4",
+        "use_custom_font": false,
         "categories_heading": "FAQ Categories",
         "general_heading": "General queries",
+        "empty_state": "No questions yet. Check back soon.",
         "back_label": "Back",
-        "close_label": "Close",
-        "empty_state": "No questions yet. Check back soon."
+        "helpful_label": "Was this helpful?",
+        "helpful_yes": "Yes",
+        "helpful_no": "No",
+        "helpful_thanks": "Thanks for your feedback!"
+      }
+    },
+    "qs_featured_BYz66V": {
+      "type": "qs-featured",
+      "name": "Featured Questions",
+      "settings": {
+        "heading": "Common Questions",
+        "subheading": "Quick answers to things people often ask. Tap any question to read the full answer.",
+        "max_per_category": 2,
+        "vertical_padding": 72,
+        "bg_color": "#EEF2FF",
+        "card_bg": "#FFFFFF",
+        "text_color": "#111827",
+        "muted_color": "#6B7280",
+        "accent_color": "#4F46E5",
+        "section_font": "assistant_n4",
+        "use_custom_font": false
       }
     }
   },
   "order": [
     "image_banner",
     "featured_collection",
-    "quick_support_J3PAyx"
+    "quick_support_J3PAyx",
+    "qs_featured_BYz66V"
   ]
 }

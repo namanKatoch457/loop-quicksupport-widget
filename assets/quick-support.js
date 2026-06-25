@@ -274,12 +274,14 @@
     }
 
     function setDeepLink(id) {
+        if (window.Shopify && window.Shopify.designMode) return;
         const url = new URL(window.location.href);
         url.searchParams.set('faq', id);
         window.history.replaceState({}, '', url);
     }
 
     function clearDeepLink() {
+        if (window.Shopify && window.Shopify.designMode) return;
         const url = new URL(window.location.href);
         url.searchParams.delete('faq');
         window.history.replaceState({}, '', url);
@@ -295,9 +297,10 @@
     document.addEventListener('qs:open-question', e => {
         const { id, category } = e.detail || {};
         if (!id) return;
-        if (!widget.classList.contains('is-open')) openPanel();
-        // Small delay so the panel finishes its open transition before navigating.
-        setTimeout(() => openQuestion(id, category, 'home'), 60);
+        const wasClosed = !widget.classList.contains('is-open');
+        if (wasClosed) openPanel();
+        // Small delay so the panel finishes its open transition if it was closed
+        setTimeout(() => openQuestion(id, category, 'home'), wasClosed ? 60 : 0);
     });
 
     // Single delegated listener on the widget covers all dynamic content
@@ -373,6 +376,7 @@
     }
 
     function onOutsideClick(e) {
+        if (e.target.closest('[data-qsf-id]')) return;
         if (!widget.contains(e.target)) closePanel();
     }
 
