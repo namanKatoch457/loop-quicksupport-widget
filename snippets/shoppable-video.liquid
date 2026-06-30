@@ -1,0 +1,74 @@
+{%- comment -%}
+  Shoppable Video
+  Renders a video tied to the first collection (that has one assigned)
+  the current product belongs to, with its tagged reference products
+  shown as a clickable shoppable strip underneath — excluding the
+  product whose page is currently being viewed.
+{%- endcomment -%}
+
+{%- liquid
+  assign shoppable_collection = null
+  assign best_priority = null
+  for collection in product.collections
+    if collection.metafields.custom.shoppable_video != blank
+      assign this_priority = collection.metafields.custom.shoppable_video_priority.value
+      if this_priority == blank
+        assign this_priority = 999999
+      endif
+      if best_priority == null or this_priority < best_priority
+        assign best_priority = this_priority
+        assign shoppable_collection = collection
+      endif
+    endif
+  endfor
+-%}
+
+{%- if shoppable_collection -%}
+  {%- assign video_file = shoppable_collection.metafields.custom.shoppable_video.value -%}
+  {%- assign tagged_products = shoppable_collection.metafields.custom.shoppable_video_products.value -%}
+  {%- liquid
+    assign other_tagged_products_count = 0
+    for tagged_product in tagged_products
+      unless tagged_product.id == product.id
+        assign other_tagged_products_count = other_tagged_products_count | plus: 1
+      endunless
+    endfor
+  -%}
+
+  <div class="shoppable-video" data-shoppable-video>
+    <div class="shoppable-video__player">
+    {{ video_file | video_tag: class: 'shoppable-video__el', controls: true, playsinline: true, preload: 'metadata', autoplay: true, muted: true, loop: true }}
+    </div>
+
+    {%- if other_tagged_products_count > 0 -%}
+      <ul class="shoppable-video__products" role="list">
+        {%- for tagged_product in tagged_products -%}
+          {%- unless tagged_product.id == product.id -%}
+            <li class="shoppable-video__product">
+              <a href="{{ tagged_product.url }}" class="shoppable-video__product-link">
+                <span class="shoppable-video__product-image">
+                  {%- if tagged_product.featured_image -%}
+                    <img
+                      src="{{ tagged_product.featured_image | image_url: width: 160 }}"
+                      alt="{{ tagged_product.featured_image.alt | escape }}"
+                      loading="lazy"
+                      width="80"
+                      height="80"
+                    >
+                  {%- endif -%}
+                </span>
+                <span class="shoppable-video__product-info">
+                  <span class="shoppable-video__product-title">{{ tagged_product.title }}</span>
+                  <span class="shoppable-video__product-price">{{ tagged_product.price | money }}</span>
+                </span>
+              </a>
+            </li>
+          {%- endunless -%}
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+  </div>
+
+  <link rel="stylesheet" href="{{ 'shoppable-video.css' | asset_url }}" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="{{ 'shoppable-video.css' | asset_url }}"></noscript>
+{%- endif -%}
